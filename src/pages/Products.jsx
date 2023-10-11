@@ -8,8 +8,8 @@ const Products = () => {
   function showList() {
     setContent(<ProductList showForm={showForm} />);
   }
-  function showForm() {
-    setContent(<ProductForm showList={showList} />);
+  function showForm(product) {
+    setContent(<ProductForm product={product} showList={showList} />);
   }
   return (
     <div className="max-w-4xl w-full mx-auto px-1 md:px-8 text-2xl font-Nunito">
@@ -23,6 +23,17 @@ export default Products;
 const ProductList = (props) => {
   const [products, setProducts] = useState([]);
 
+  function handlerDelete(id) {
+    fetch(`http://localhost:3004/products/${id}`, {
+      method: "DELETE",
+    })
+      .then((reponse) => {
+        toast.success("Delete product -" + id);
+        fetchProducts();
+      })
+      .catch((err) => console.log("Fail internal error"));
+  }
+
   function fetchProducts() {
     fetch("http://localhost:3004/products")
       .then((response) => {
@@ -32,7 +43,7 @@ const ProductList = (props) => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
+        //console.log(data);
         setProducts(data);
       })
       .catch((error) => console.log("Error", error));
@@ -51,7 +62,7 @@ const ProductList = (props) => {
       </div>
       <div className="flex mt-6 justify-between">
         <button
-          onClick={() => props.showForm()}
+          onClick={() => props.showForm({})}
           className="px-4 py-2  bg-red-100 text-blue-950 font-semibold rounded-lg"
         >
           Add new item
@@ -74,11 +85,17 @@ const ProductList = (props) => {
             </div>
             <div className="px-3 py-2 text-lg">{item.identity}</div>
             <div className="space-x-1 mr-1">
-              <button className="p-2  cursor-pointer bg-green-600 text-white text-sm rounded-md">
+              <button
+                onClick={() => props.showForm(item)}
+                className="p-2  cursor-pointer bg-green-600 text-white text-sm rounded-md"
+              >
                 Edit
               </button>
 
-              <button className="p-2  cursor-pointer bg-red-600 text-white text-sm rounded-md">
+              <button
+                onClick={() => handlerDelete(item.id)}
+                className="p-2  cursor-pointer bg-red-600 text-white text-sm rounded-md"
+              >
                 Delete
               </button>
             </div>
@@ -92,6 +109,15 @@ const ProductList = (props) => {
 const ProductForm = (props) => {
   const [inputs, setInputs] = useState({ name: "", identity: "" });
   const { name, identity } = inputs;
+  if (props.product.id) {
+    //toast.error(inputs.name + " " + inputs.identity + " " + props.product.id);
+  }
+  useEffect(() => {
+    if (props.product.id) {
+      setInputs(props.product);
+    }
+  }, []);
+  //console.log(props.product);
   function handleInputChange(e) {
     const { name, value } = e.target;
     //console.log(name + "-" + value);
@@ -103,36 +129,68 @@ const ProductForm = (props) => {
   function submitform(e) {
     e.preventDefault();
     const create__at = new Date().toISOString().slice(0, 10);
-    //console.log(create__at);
-    //read form data
-    //console.log(inputs);
+
     const form__data = new FormData();
-    //convert form data to object
-    const product = Object.fromEntries(form__data.entries());
-    //console.log(product);
+    const product__inputs = Object.fromEntries(form__data.entries());
+    //console.log(product__inputs);
+
     if (!inputs.name || !inputs.identity) {
       console.log("error , please fill data");
-      toast.warn("please fill data ?");
+      toast.error("🦄 Please fill the form!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
       return;
     }
-
-    fetch("http://localhost:3004/products", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(inputs),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          console.log("error on server");
-          throw new Error("Network Error");
-        }
-        toast.success("Add " + inputs.name + " to your db.json");
-        return response.json();
+    if (props.product.id) {
+      toast.warn("you try to update id-" + props.product.id);
+      fetch(`http://localhost:3004/products/${props.product.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(inputs),
       })
-      .then((data) => props.showList())
-      .catch((error) => console.log("error intanal"));
+        .then()
+        .then((data) => props.showList())
+        .catch((error) => console.log("Fail to update"));
+
+      return;
+    } else {
+      fetch("http://localhost:3004/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(inputs),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            toast.error("🦄 Network error!", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            });
+            throw new Error("Network Error");
+          }
+          toast.success("Add " + inputs.name + " to your db.json");
+          setInputs({ name: "", identity: "" });
+          return response.json();
+        })
+        .then((data) => props.showList())
+        .catch((error) => console.log("error intanal"));
+    }
   }
   return (
     <div className="gap-2 mt-3 p-3 rounded-xl w-full  text-Blue-950  bg-indigo-100">
@@ -144,7 +202,7 @@ const ProductForm = (props) => {
 
       <div className="justify-center items-center flex">
         <span className="mt-2 text-green-50 bg-green-600 text-center rounded-lg px-4 py-3 ">
-          Add new product
+          {props.product.id ? "Edit product " : "Add new product"}
         </span>
       </div>
       <div className="flex mt-6 justify-between">
@@ -160,11 +218,24 @@ const ProductForm = (props) => {
       </div>
       <div className="flex flex-col w-full mt-3">
         <form onSubmit={(e) => submitform(e)}>
+          {props.product.id && (
+            <div className="">
+              <input
+                type="text"
+                name="id"
+                readOnly
+                value={props.product.id}
+                className="w-full p-3 border-none rounded-t-lg text-red-700 underline"
+                placeholder="input name"
+              />
+            </div>
+          )}
+          {/**  end hidden product id } */}
           <div className="">
             <input
               type="text"
               name="name"
-              value={inputs.name}
+              defaultValue={props.product.name}
               onChange={(e) => handleInputChange(e)}
               className="w-full p-3 border-none rounded-lg"
               placeholder="input name"
@@ -174,7 +245,7 @@ const ProductForm = (props) => {
             <input
               type="text"
               name="identity"
-              value={inputs.identity}
+              defaultValue={props.product.identity}
               onChange={(e) => handleInputChange(e)}
               className="w-full p-3 border-none rounded-lg"
               placeholder="Identify people"
@@ -185,7 +256,7 @@ const ProductForm = (props) => {
               type="submit"
               className="rounded-xl shadow-md w-full p-3 bg-blue-700 text-white"
             >
-              Submit new product
+              {props.product.id ? "Update " : "Add new product"}
             </button>
           </div>
         </form>

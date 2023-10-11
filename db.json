@@ -6,14 +6,9 @@
       "identity": "Thai"
     },
     {
-      "id": "2",
-      "name": "Artorn",
-      "identity": "Khonkaen"
-    },
-    {
       "id": "3",
       "name": "Suchad Tongdaeng",
-      "identity": "AGR engineer"
+      "identity": "Thai"
     },
     {
       "name": "Yua mikami",
@@ -34,6 +29,41 @@
       "name": "Akiho Yoshikawa",
       "identity": "Japan",
       "id": "b6LAYxr"
+    },
+    {
+      "name": "Ameri Ichinose",
+      "identity": "Japan",
+      "id": "dXkvVN7"
+    },
+    {
+      "name": "Asahi mizuno",
+      "identity": "Japan",
+      "id": "VORiSkM"
+    },
+    {
+      "name": "Aino Kishi",
+      "identity": "Japan",
+      "id": "Qd0NuIN"
+    },
+    {
+      "name": "Uehara mizuno",
+      "identity": "Japan",
+      "id": "5RkiLOe"
+    },
+    {
+      "name": "Alexa grace",
+      "identity": "USA",
+      "id": "nMMViQu"
+    },
+    {
+      "name": "Emily Okazaki",
+      "identity": "Thai",
+      "id": "44aVsLp"
+    },
+    {
+      "name": "Nat Kedsirin",
+      "identity": "Thai",
+      "id": "YS-ez7Y"
     }
   ]
 }
