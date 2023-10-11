@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="bg-slate-50">
       <Navbar />
-      <Products />
+      <h2 className="text-xl">Todo list</h2>
     </div>
   );
 }
