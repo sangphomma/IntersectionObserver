@@ -1,0 +1,16 @@
+{
+  "products": [
+    {
+      "name": "Sirikorn Saengphomma",
+      "identity": "Thai"
+    },
+    {
+      "name": "Artorn",
+      "identity": "Khonkaen"
+    },
+    {
+      "name": "Suchad Tongdaeng",
+      "identity": "AGR engineer"
+    }
+  ]
+}

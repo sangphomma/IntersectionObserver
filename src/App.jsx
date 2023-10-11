@@ -1,14 +1,24 @@
 import { useState } from "react";
 
 import Navbar from "./components/navbar/Navbar";
-import Products from "./components/products";
+import Products from "./pages/Products";
+import Footer from "./components/navbar/Footer";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
 
 function App() {
   return (
-    <div className="bg-slate-50">
-      <Navbar />
-      <h2 className="text-xl">Todo list</h2>
-    </div>
+    <BrowserRouter>
+      <div className="bg-slate-50 flex flex-col min-h-screen ">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/products" element={<Products />} />
+        </Routes>
+
+        <Footer />
+      </div>
+    </BrowserRouter>
   );
 }
 

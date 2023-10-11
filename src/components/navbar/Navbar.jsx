@@ -1,18 +1,25 @@
 import React from "react";
 import "./navbar.css";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
-    <div className="navbar h-[80px] bg-yellow-50 text-2xl font-Nunito">
-      <div className="container flex justify-between px-10">
+    <div className="navbar h-[80px] bg-amber-50 text-2xl font-Nunito">
+      <div className="max-w-4xl w-full flex justify-between px-10">
         <div className="text-green-500 font-black">
           <span className="font-bold text-yellow-600 ">Nav</span>
           Bar
         </div>
         <div className="hidden  md:flex gap-5 font-semibold">
-          <div>Home</div>
-          <div>Add</div>
-          <div>Edit</div>
+          <div>
+            <Link to="/">Home </Link>
+          </div>
+          <div>
+            <Link to="/products">Products</Link>
+          </div>
+          <div>
+            <Link to="/add">Add</Link>
+          </div>
         </div>
 
         <div className="naviconmenu  flex gap-2 text-red-700">
